@@ -21,18 +21,15 @@
 
 const mongoose = require('mongoose');
 
-// use your Render environment variable
+// Get the MongoDB URI from environment variables (Render or .env)
 const mongooseURL = process.env.MONGO_URI;
 
-mongoose.connect(mongooseURL, {
-    useNewUrlParser: true,
-    useUnifiedTopology: true,
-})
-.then(() => {
+mongoose.connect(mongooseURL)
+  .then(() => {
     console.log('✅ Connected to MongoDB Atlas');
-})
-.catch((err) => {
-    console.error('❌ MongoDB Atlas connection error:', err.message);
-});
+  })
+  .catch((err) => {
+    console.error('❌ MongoDB connection error:', err.message);
+  });
 
 module.exports = mongoose.connection;
