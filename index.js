@@ -85,7 +85,8 @@ app.get('/fetch_userProfile_for_sendReq', async (req, res) => {
         console.log('✅ User saved:', data);
         res.status(200).json(data);
     } catch (error) {
-      
+       console.error('❌ Error fetching users:', error);
+        res.status(500).json({ message: 'Internal Server Error', error: error.message });
     }
 })
 
