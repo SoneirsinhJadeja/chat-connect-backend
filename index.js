@@ -29,6 +29,20 @@ const upload = multer({ storage: multer.memoryStorage() });
 app.get('/', (req, res) => {
   res.send('📡 Server is running and ready to accept requests!');
 });
+// 🌐 Root endpoint
+app.get('/add_userProfile', (req, res) => {
+  res.send('📡 Server is running and ready to accept requests!');
+});
+
+// 🌐 Root endpoint
+app.get('/add_friendRequest', (req, res) => {
+  res.send('📡 Server is running and ready to accept requests!');
+});
+
+// 🌐 Root endpoint
+app.get('/fetch_userProfile_for_sendReq', (req, res) => {
+  res.send('📡 Server is running and ready to accept requests!');
+});
 
 
 // ========================
