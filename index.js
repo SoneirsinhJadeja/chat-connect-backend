@@ -69,6 +69,19 @@ app.post('/add_userProfile', upload.single('DP'), async (req, res) => {
   }
 });
 
+// ========================
+// 📥 Fetch All User Profiles (for search & sending requests)
+// ========================
+app.get('/fetch_userProfile_for_sendReq', async (req, res) => {
+  try {
+    const data = await userProfile.find();
+    console.log('✅ Fetched user profiles');
+    res.status(200).json(data);
+  } catch (error) {
+    console.error('❌ Error fetching users:', error);
+    res.status(500).json({ message: 'Internal Server Error', error: error.message });
+  }
+});
 
 // ========================
 // 🤝 Add Friend Request
@@ -115,15 +128,21 @@ app.post('/add_friendRequest', upload.single('DP'), async (req, res) => {
 
 
 // ========================
-// 📥 Fetch All User Profiles (for search & sending requests)
+// 📥 Fetch users friend frequest
 // ========================
-app.get('/fetch_userProfile_for_sendReq', async (req, res) => {
+app.get('/fetch_friendRequest', async (req, res) => {
+  const userEmail = req.query.email; // Get email from query string
+
+  if (!userEmail) {
+    return res.status(400).json({ message: 'Missing email parameter' });
+  }
+
   try {
-    const data = await userProfile.find();
-    console.log('✅ Fetched user profiles');
+    const data = await friendRequest.find({ to: userEmail }); // 🔍 Only requests sent TO this user
+    console.log(`✅ Friend requests for: ${userEmail}`);
     res.status(200).json(data);
   } catch (error) {
-    console.error('❌ Error fetching users:', error);
+    console.error('❌ Error fetching friend requests:', error);
     res.status(500).json({ message: 'Internal Server Error', error: error.message });
   }
 });
