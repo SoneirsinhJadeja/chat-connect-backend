@@ -13,17 +13,13 @@ const userRequestSchema = new mongoose.Schema({
     type: String,
     required: true,
   },
-  status: {
-    type: String,
-    default: "pending", // ✅ Default status
-  },
   photoBase64: {
     type: String,
     required: false,
   },
   whenRequested: {
-    type: Date, // ✅ Store as proper Date instead of string
-    default: Date.now,
+    type: String,
+    required: true,
   },
 }, {
   timestamps: true // ✅ Automatically add createdAt and updatedAt

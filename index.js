@@ -3,6 +3,7 @@ const express = require('express');
 const multer = require('multer');
 const cors = require('cors');
 const validator = require('validator');
+const moment = require('moment');
 
 // 🗃️ Import DB and Mongoose models
 const db = require('./db.js'); // MongoDB connection
@@ -88,9 +89,13 @@ app.get('/fetch_userProfile_for_sendReq', async (req, res) => {
 // ========================
 app.post('/add_friendRequest', upload.single('DP'), async (req, res) => {
   try {
-    const { from, requestUserName, to } = req.body;
+    const {
+      from,
+      requestUserName,
+      to,
+    } = req.body;
 
-    // 🧠 Required fields validation
+    // ✅ 1. Validate required fields
     if (!from || !to || !requestUserName) {
       return res.status(400).json({ error: "Missing required fields" });
     }
@@ -99,22 +104,27 @@ app.post('/add_friendRequest', upload.single('DP'), async (req, res) => {
       return res.status(400).json({ error: "Invalid email format" });
     }
 
-    // 🔁 Prevent duplicate friend requests
+    // ✅ 2. Prevent duplicate friend request
     const existingRequest = await friendRequest.findOne({ from, to });
     if (existingRequest) {
       return res.status(409).json({ message: "Friend request already sent" });
     }
 
+    // ✅ 3. Convert image to base64 if exists
     const photoBase64 = req.file
       ? `data:${req.file.mimetype};base64,${req.file.buffer.toString('base64')}`
       : null;
 
+    // ✅ 4. Format date
+    const formattedDate = moment().format('DD-MM-YYYY hh:mm A');
+
+    // ✅ 5. Create new request
     const newRequest = new friendRequest({
       from,
       to,
       requestedUsername: requestUserName,
+      whenRequested: formattedDate,
       photoBase64,
-      status: "pending", // Default status
     });
 
     const savedRequest = await newRequest.save();
