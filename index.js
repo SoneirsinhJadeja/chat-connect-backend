@@ -157,19 +157,20 @@ app.get('/fetch_friendRequest', async (req, res) => {
     res.status(500).json({ message: 'Internal Server Error', error: error.message });
   }
 });
-
-// ========================
-// 🤝 Create Conversation (No isGroup)
-// ========================
 app.post('/createConversation', upload.single('DP'), async (req, res) => {
   try {
+    console.log("📥 Incoming request to /createConversation");
+
     const { groupName } = req.body;
+    console.log("🔹 groupName:", groupName);
+    console.log("🔹 participants (raw):", req.body.participants);
 
     if (!req.body.participants || !groupName) {
       return res.status(400).json({ error: "Missing required fields" });
     }
 
-    const fromArray = JSON.parse(req.body.participants); // ✅ FIXED
+    const fromArray = JSON.parse(req.body.participants);
+    console.log("✅ Parsed participants:", fromArray);
 
     const photoBase64 = req.file
       ? `data:${req.file.mimetype};base64,${req.file.buffer.toString('base64')}`
@@ -189,7 +190,7 @@ app.post('/createConversation', upload.single('DP'), async (req, res) => {
     res.status(201).json(savedConversation);
   } catch (error) {
     console.error('❌ Error saving conversation:', error);
-    res.status(500).json({ error: "Internal Server Error" });
+    res.status(500).json({ error: "Internal Server Error", message: error.message });
   }
 });
 
