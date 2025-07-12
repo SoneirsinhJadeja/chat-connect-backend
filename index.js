@@ -163,24 +163,14 @@ app.get('/fetch_friendRequest', async (req, res) => {
 // ========================
 app.post('/createConversation', upload.single('DP'), async (req, res) => {
   try {
-    const { from, groupName } = req.body;
+    const { groupName } = req.body;
 
-    if (!from || !groupName) {
+    if (!req.body.participants || !groupName) {
       return res.status(400).json({ error: "Missing required fields" });
     }
 
-    const fromArray = Array.isArray(from) ? from : JSON.parse(from);
+    const fromArray = JSON.parse(req.body.participants); // ✅ FIXED
 
-    // ✅ Check if same participants' conversation already exists
-    const existingConversation = await conversation.findOne({
-      participants: { $all: fromArray, $size: fromArray.length }
-    });
-
-    if (existingConversation) {
-      return res.status(409).json({ message: "Conversation already exists" });
-    }
-
-    // ✅ Convert image to base64 if uploaded
     const photoBase64 = req.file
       ? `data:${req.file.mimetype};base64,${req.file.buffer.toString('base64')}`
       : null;
@@ -202,6 +192,7 @@ app.post('/createConversation', upload.single('DP'), async (req, res) => {
     res.status(500).json({ error: "Internal Server Error" });
   }
 });
+
 
 // 🚀 Start the server
 const port = process.env.PORT || 3000;
