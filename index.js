@@ -9,6 +9,7 @@ const moment = require('moment');
 const db = require('./db.js'); // MongoDB connection
 const userProfile = require('./Schemas/userProfileSchema.js'); // User Profile model
 const friendRequest = require('./Schemas/friendRequestSchema.js'); // Friend Request model
+const createConversation = require('./Schemas/createConversationSchema.js'); // Friend Request model
 
 // 🚀 Initialize Express app
 const app = express();
@@ -157,6 +158,50 @@ app.get('/fetch_friendRequest', async (req, res) => {
   }
 });
 
+// ========================
+// 🤝 Create Conversation (No isGroup)
+// ========================
+app.post('/createConversation', upload.single('DP'), async (req, res) => {
+  try {
+    const { from, groupName } = req.body;
+
+    if (!from || !groupName) {
+      return res.status(400).json({ error: "Missing required fields" });
+    }
+
+    const fromArray = Array.isArray(from) ? from : JSON.parse(from);
+
+    // ✅ Check if same participants' conversation already exists
+    const existingConversation = await conversation.findOne({
+      participants: { $all: fromArray, $size: fromArray.length }
+    });
+
+    if (existingConversation) {
+      return res.status(409).json({ message: "Conversation already exists" });
+    }
+
+    // ✅ Convert image to base64 if uploaded
+    const photoBase64 = req.file
+      ? `data:${req.file.mimetype};base64,${req.file.buffer.toString('base64')}`
+      : null;
+
+    const formattedDate = moment().format('DD-MM-YYYY hh:mm A');
+
+    const newConversation = new conversation({
+      participants: fromArray,
+      groupName,
+      createdAt: formattedDate,
+      DP: photoBase64
+    });
+
+    const savedConversation = await newConversation.save();
+    console.log('✅ Conversation saved:', savedConversation);
+    res.status(201).json(savedConversation);
+  } catch (error) {
+    console.error('❌ Error saving conversation:', error);
+    res.status(500).json({ error: "Internal Server Error" });
+  }
+});
 
 // 🚀 Start the server
 const port = process.env.PORT || 3000;
