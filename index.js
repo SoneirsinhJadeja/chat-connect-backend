@@ -157,20 +157,27 @@ app.get('/fetch_friendRequest', async (req, res) => {
     res.status(500).json({ message: 'Internal Server Error', error: error.message });
   }
 });
+
+
+
 app.post('/createConversation', upload.single('DP'), async (req, res) => {
   try {
-    console.log("📥 Incoming request to /createConversation");
+    const { participants, groupName } = req.body;
 
-    const { groupName } = req.body;
-    console.log("🔹 groupName:", groupName);
-    console.log("🔹 participants (raw):", req.body.participants);
-
-    if (!req.body.participants || !groupName) {
+    if (!participants || !groupName) {
       return res.status(400).json({ error: "Missing required fields" });
     }
 
-    const fromArray = JSON.parse(req.body.participants);
-    console.log("✅ Parsed participants:", fromArray);
+    let fromArray;
+    try {
+      fromArray = JSON.parse(participants);
+    } catch (e) {
+      return res.status(400).json({ error: "Invalid JSON for participants", raw: participants });
+    }
+
+    if (!Array.isArray(fromArray) || fromArray.length === 0) {
+      return res.status(400).json({ error: "Participants must be a non-empty array" });
+    }
 
     const photoBase64 = req.file
       ? `data:${req.file.mimetype};base64,${req.file.buffer.toString('base64')}`
@@ -178,7 +185,7 @@ app.post('/createConversation', upload.single('DP'), async (req, res) => {
 
     const formattedDate = moment().format('DD-MM-YYYY hh:mm A');
 
-    const newConversation = new conversation({
+    const newConversation = new createConversation({
       participants: fromArray,
       groupName,
       createdAt: formattedDate,
@@ -193,6 +200,7 @@ app.post('/createConversation', upload.single('DP'), async (req, res) => {
     res.status(500).json({ error: "Internal Server Error", message: error.message });
   }
 });
+
 
 
 // 🚀 Start the server

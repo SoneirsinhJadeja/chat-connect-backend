@@ -16,9 +16,11 @@ const chatsSchema = new mongoose.Schema({
   createdAt: {
     type: String,
     required: true, // ✅ Timestamp for sorting chats
+    default: () => moment().format('DD-MM-YYYY hh:mm A')
   },
   DP: {
     type: String, // ✅ Optional group or 1-1 chat image
+    default: null
   }
 
 });
