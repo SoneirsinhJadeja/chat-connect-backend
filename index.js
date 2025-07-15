@@ -9,7 +9,7 @@ const moment = require('moment');
 const db = require('./db.js'); // MongoDB connection
 const userProfile = require('./Schemas/userProfileSchema.js'); // User Profile model
 const friendRequest = require('./Schemas/friendRequestSchema.js'); // Friend Request model
-const createConversation = require('./Schemas/createConversationSchema.js'); // Friend Request model
+const Conversation  = require('./Schemas/createConversationSchema.js'); // Friend Request model
 
 // 🚀 Initialize Express app
 const app = express();
@@ -172,11 +172,7 @@ app.post('/createConversation', upload.single('DP'), async (req, res) => {
     try {
       fromArray = JSON.parse(participants);
     } catch (e) {
-      return res.status(400).json({ error: "Invalid JSON for participants", raw: participants });
-    }
-
-    if (!Array.isArray(fromArray) || fromArray.length === 0) {
-      return res.status(400).json({ error: "Participants must be a non-empty array" });
+      return res.status(400).json({ error: "Invalid JSON for participants" });
     }
 
     const photoBase64 = req.file
@@ -185,21 +181,22 @@ app.post('/createConversation', upload.single('DP'), async (req, res) => {
 
     const formattedDate = moment().format('DD-MM-YYYY hh:mm A');
 
-    const newConversation = new createConversation({
+    // ✅ FIXED HERE
+    const newConversation = new Conversation({
       participants: fromArray,
       groupName,
       createdAt: formattedDate,
-      DP: photoBase64
+      DP: photoBase64,
     });
 
-    const savedConversation = await newConversation.save();
-    console.log('✅ Conversation saved:', savedConversation);
-    res.status(201).json(savedConversation);
+    const saved = await newConversation.save();
+    res.status(201).json(saved);
   } catch (error) {
     console.error('❌ Error saving conversation:', error);
     res.status(500).json({ error: "Internal Server Error", message: error.message });
   }
 });
+
 
 
 // 🚀 Start the server
