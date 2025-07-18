@@ -186,7 +186,7 @@ app.put('/update_participants/:id', async (req, res) => {
   }
 
   try {
-    const updated = await createConversation.findByIdAndUpdate(
+    const updated = await Conversation.findByIdAndUpdate(
       convoId,
       { participants: updatedParticipants },
       { new: true }
@@ -207,9 +207,9 @@ app.post('/createConversation', upload.single('DP'), async (req, res) => {
       return res.status(400).json({ error: "Missing required fields" });
     }
 
-    let fromArray;
+    let participantArray;
     try {
-      fromArray = JSON.parse(participants);
+      participantArray = JSON.parse(participants);
     } catch (e) {
       return res.status(400).json({ error: "Invalid JSON for participants" });
     }
@@ -220,9 +220,8 @@ app.post('/createConversation', upload.single('DP'), async (req, res) => {
 
     const formattedDate = moment().format('DD-MM-YYYY hh:mm A');
 
-    // ✅ FIXED HERE
     const newConversation = new Conversation({
-      participants: fromArray,
+      participants: participantArray,
       groupName,
       createdAt: formattedDate,
       DP: photoBase64,
