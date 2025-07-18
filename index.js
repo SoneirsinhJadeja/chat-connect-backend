@@ -159,6 +159,39 @@ app.get('/fetch_friendRequest', async (req, res) => {
   }
 });
 
+app.get('/find_conversation', async (req, res) => {
+  const groupName = req.query.groupName;
+  if (!groupName) return res.status(400).json({ error: 'Missing groupName' });
+
+  try {
+    const convo = await createConversation.findOne({ groupName });
+    if (!convo) return res.status(404).json(null);
+    res.status(200).json(convo);
+  } catch (e) {
+    res.status(500).json({ error: e.message });
+  }
+});
+
+app.put('/update_participants/:id', async (req, res) => {
+  const convoId = req.params.id;
+  const updatedParticipants = req.body.participants;
+
+  if (!Array.isArray(updatedParticipants)) {
+    return res.status(400).json({ error: 'Participants must be an array' });
+  }
+
+  try {
+    const updated = await createConversation.findByIdAndUpdate(
+      convoId,
+      { participants: updatedParticipants },
+      { new: true }
+    );
+    res.status(200).json(updated);
+  } catch (e) {
+    res.status(500).json({ error: e.message });
+  }
+});
+
 
 
 app.post('/createConversation', upload.single('DP'), async (req, res) => {
