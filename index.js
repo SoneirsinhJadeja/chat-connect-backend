@@ -160,11 +160,11 @@ app.get('/fetch_friendRequest', async (req, res) => {
 });
 
 app.get('/find_conversation', async (req, res) => {
-  const groupName = req.query.groupName;
+  const email = req.query.Email;
   if (!groupName) return res.status(400).json({ error: 'Missing groupName' });
 
   try {
-    const convo = await createConversation.findOne({ groupName });
+    const convo = await createConversation.findOne({ email });
     if (!convo) return res.status(404).json(null);
     res.status(200).json(convo);
   } catch (e) {
