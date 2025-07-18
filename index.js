@@ -161,16 +161,21 @@ app.get('/fetch_friendRequest', async (req, res) => {
 
 app.get('/find_conversation', async (req, res) => {
   const email = req.query.Email;
-  if (!groupName) return res.status(400).json({ error: 'Missing groupName' });
+
+  if (!email) return res.status(400).json({ error: 'Missing email' });
 
   try {
-    const convo = await createConversation.findOne({ email });
+    const convo = await createConversation.findOne({
+      participants: { $in: [email] }
+    });
+
     if (!convo) return res.status(404).json(null);
     res.status(200).json(convo);
   } catch (e) {
     res.status(500).json({ error: e.message });
   }
 });
+
 
 app.put('/update_participants/:id', async (req, res) => {
   const convoId = req.params.id;
