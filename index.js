@@ -165,7 +165,7 @@ app.get('/find_conversation', async (req, res) => {
   if (!email) return res.status(400).json({ error: 'Missing email' });
 
   try {
-    const convo = await createConversation.findOne({
+    const convo = await Conversation.findOne({
       participants: { $in: [email] }
     });
 
