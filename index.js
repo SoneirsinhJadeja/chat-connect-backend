@@ -7,6 +7,7 @@ const moment = require('moment-timezone'); // ✅ Only this one — remove dupli
 const router = express.Router();
 
 // 🗃️ Import DB and Mongoose models
+const mongoose = require('mongoose');
 const db = require('./db.js'); // MongoDB connection
 const userProfile = require('./Schemas/userProfileSchema.js'); // User Profile model
 const friendRequest = require('./Schemas/friendRequestSchema.js'); // Friend Request model
