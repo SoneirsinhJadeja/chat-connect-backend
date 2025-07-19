@@ -152,7 +152,7 @@ app.get('/fetch_friendRequest', async (req, res) => {
   }
 
   try {
-    const requests = await friendRequest.find({ chatOwner: email });
+    const requests = await friendRequest.find({ to: email });
 
     if (!requests || requests.length === 0) {
       return res.status(404).json([]); // ✅ Return empty list instead of null
