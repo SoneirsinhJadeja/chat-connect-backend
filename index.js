@@ -195,7 +195,7 @@ app.put('/update_participants/:id', async (req, res) => {
 
   try {
     const updated = await chatsList.findByIdAndUpdate(
-      new mongoose.Types.ObjectId(convoId), // ✅ Cast to ObjectId
+      new mongoose.Types.ObjectId(convoId), // ✅ this line needs mongoose
       { participants: updatedParticipants },
       { new: true }
     );
