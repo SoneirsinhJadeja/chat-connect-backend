@@ -174,7 +174,7 @@ router.get('/find_conversation', async (req, res) => {
 
   try {
     const convo = await chatsList.findOne({
-      participants: { $in: [email] }
+      chatOwner : email,
     });
 
     if (!convo) return res.status(404).json(null);
