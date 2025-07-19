@@ -3,24 +3,23 @@ const express = require('express');
 const multer = require('multer');
 const cors = require('cors');
 const validator = require('validator');
-const moment = require('moment');
+const moment = require('moment-timezone'); // ✅ Only this one — remove duplicate
 const router = express.Router();
 
 // 🗃️ Import DB and Mongoose models
 const db = require('./db.js'); // MongoDB connection
 const userProfile = require('./Schemas/userProfileSchema.js'); // User Profile model
 const friendRequest = require('./Schemas/friendRequestSchema.js'); // Friend Request model
-const chatsList = require('./Schemas/createConversationSchema.js'); // Friend Request model
-const moment = require('moment-timezone'); // If using timezone support
+const chatsList = require('./Schemas/createConversationSchema'); // Chat schema
 
 // 🚀 Initialize Express app
 const app = express();
 
 // 📦 Middleware
 app.use(cors());
-app.use(express.json());
-app.use('/', router);
-app.use(express.urlencoded({ extended: true }));
+app.use(express.json()); // ✅ For JSON body parsing
+app.use(express.urlencoded({ extended: true })); // ✅ For form-urlencoded data
+app.use('/', router); // ✅ Mount router AFTER middlewares
 
 // ✅ Ensure unique indexes (example: unique email in user profile)
 userProfile.init().then(() => {
@@ -206,9 +205,12 @@ app.put('/update_participants/:id', async (req, res) => {
 
 
 
-app.post('/createConversation', async (req, res) => {
+router.post('/createConversation', async (req, res) => {
   try {
+    console.log("🚀 /createConversation hit!");
     const { participants, chatOwner } = req.body;
+
+    console.log("📦 Body received:", req.body);
 
     if (!participants || !chatOwner) {
       return res.status(400).json({ error: "Missing required fields" });
@@ -227,7 +229,7 @@ app.post('/createConversation', async (req, res) => {
     });
 
     const saved = await newConversation.save();
-    console.log("✅ New conversation saved:", saved);
+    console.log("✅ Saved:", saved);
     res.status(201).json(saved);
   } catch (error) {
     console.error("❌ Error creating conversation:", error);
@@ -235,7 +237,7 @@ app.post('/createConversation', async (req, res) => {
   }
 });
 
-
+module.exports = router;
 
 // 🚀 Start the server
 const port = process.env.PORT || 3000;
