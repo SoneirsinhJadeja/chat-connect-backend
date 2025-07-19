@@ -168,7 +168,7 @@ app.get('/fetch_friendRequest', async (req, res) => {
 
 
 app.get('/find_conversation', async (req, res) => {
-  const email = req.query.Email;
+  const email = req.query.email;
 
   if (!email) return res.status(400).json({ error: 'Missing email' });
 
@@ -178,6 +178,7 @@ app.get('/find_conversation', async (req, res) => {
     });
 
     if (!convo) return res.status(404).json(null);
+
     res.status(200).json(convo);
   } catch (e) {
     res.status(500).json({ error: e.message });
