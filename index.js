@@ -144,26 +144,27 @@ app.post('/add_friendRequest', upload.single('DP'), async (req, res) => {
 // 📥 Fetch users friend frequest
 // ========================
 // ✅ Only fetch conversations where chatOwner === email
-app.get('/find_conversation', async (req, res) => { 
-  const email = req.query.Email;
+app.get('/fetch_friendRequest', async (req, res) => { 
+  const email = req.query.email; // use `email` in lowercase to match frontend
 
   if (!email) {
     return res.status(400).json({ error: 'Missing email' });
   }
 
   try {
-    const convo = await Conversation.findOne({ chatOwner: email });
+    const requests = await friendRequest.find({ chatOwner: email });
 
-    if (!convo) {
-      return res.status(404).json(null);
+    if (!requests || requests.length === 0) {
+      return res.status(404).json([]); // ✅ Return empty list instead of null
     }
 
-    res.status(200).json(convo);
+    res.status(200).json(requests);
   } catch (e) {
-    console.error("❌ Error finding conversation:", e.message);
+    console.error("❌ Error fetching friend requests:", e.message);
     res.status(500).json({ error: e.message });
   }
 });
+
 
 
 app.get('/find_conversation', async (req, res) => {
