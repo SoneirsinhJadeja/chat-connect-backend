@@ -4,6 +4,7 @@ const multer = require('multer');
 const cors = require('cors');
 const validator = require('validator');
 const moment = require('moment');
+const router = express.Router();
 
 // 🗃️ Import DB and Mongoose models
 const db = require('./db.js'); // MongoDB connection
@@ -18,6 +19,7 @@ const app = express();
 // 📦 Middleware
 app.use(cors());
 app.use(express.json());
+app.use('/', router);
 app.use(express.urlencoded({ extended: true }));
 
 // ✅ Ensure unique indexes (example: unique email in user profile)
@@ -143,7 +145,7 @@ app.post('/add_friendRequest', upload.single('DP'), async (req, res) => {
 // 📥 Fetch users friend frequest
 // ========================
 // ✅ Only fetch conversations where chatOwner === email
-app.get('/find_conversation', async (req, res) => {
+app.get('/find_conversation', async (req, res) => { 
   const email = req.query.Email;
 
   if (!email) {
@@ -205,7 +207,7 @@ app.put('/update_participants/:id', async (req, res) => {
 
 
 
-app.post('/createConversation', upload.none(), async (req, res) => {
+router.post('/createConversation', async (req, res) => {
   try {
     const { participants, chatOwner } = req.body;
 
@@ -213,34 +215,23 @@ app.post('/createConversation', upload.none(), async (req, res) => {
       return res.status(400).json({ error: "Missing required fields" });
     }
 
-    let participantArray;
-    try {
-      participantArray = JSON.parse(participants);
-    } catch (e) {
-      return res.status(400).json({ error: "Invalid JSON for participants" });
+    if (!Array.isArray(participants)) {
+      return res.status(400).json({ error: "Participants must be an array" });
     }
 
-    // const photoBase64 = req.file
-    //   ? `data:${req.file.mimetype};base64,${req.file.buffer.toString('base64')}`
-    //   : null;
-
-    const moment = require('moment-timezone'); // If using timezone support
-
-    // For India timezone, e.g. Asia/Kolkata
     const formattedDate = moment().tz('Asia/Kolkata').format('DD-MM-YYYY hh:mm A');
 
-
     const newConversation = new Conversation({
-      participants: participantArray,
+      participants,
       chatOwner,
       createdAt: formattedDate,
-      // DP: photoBase64,
     });
 
     const saved = await newConversation.save();
+    console.log("✅ New conversation saved:", saved);
     res.status(201).json(saved);
   } catch (error) {
-    console.error('❌ Error saving conversation:', error);
+    console.error("❌ Error creating conversation:", error);
     res.status(500).json({ error: "Internal Server Error", message: error.message });
   }
 });

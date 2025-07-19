@@ -14,10 +14,9 @@ const chatsSchema = new mongoose.Schema({
     required: false, // ✅ Optional, only needed if isGroup is true
   },
   createdAt: {
-  type: Date,
-  default: Date.now, // Automatically stores server timestamp
-}
-
+    type: String,
+    required: true, // ✅ Timestamp for sorting chats
+  },
   // DP: {
   //   type: String, // ✅ Optional group or 1-1 chat image
   //   default: null
@@ -27,4 +26,4 @@ const chatsSchema = new mongoose.Schema({
 
 // ✅ Model name: chats
 // ✅ Collection name: chats
-module.exports = mongoose.model("chats", chatsSchema, "chats");
+module.exports = mongoose.model("chatsList", chatsSchema, "chatsList");
