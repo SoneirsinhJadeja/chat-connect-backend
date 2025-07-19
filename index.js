@@ -201,9 +201,9 @@ app.put('/update_participants/:id', async (req, res) => {
 
 app.post('/createConversation', upload.single('DP'), async (req, res) => {
   try {
-    const { participants, groupName } = req.body;
+    const { participants } = req.body;
 
-    if (!participants || !groupName) {
+    if (!participants) {
       return res.status(400).json({ error: "Missing required fields" });
     }
 
@@ -214,17 +214,17 @@ app.post('/createConversation', upload.single('DP'), async (req, res) => {
       return res.status(400).json({ error: "Invalid JSON for participants" });
     }
 
-    const photoBase64 = req.file
-      ? `data:${req.file.mimetype};base64,${req.file.buffer.toString('base64')}`
-      : null;
+    // const photoBase64 = req.file
+    //   ? `data:${req.file.mimetype};base64,${req.file.buffer.toString('base64')}`
+    //   : null;
 
     const formattedDate = moment().format('DD-MM-YYYY hh:mm A');
 
     const newConversation = new Conversation({
       participants: participantArray,
-      groupName,
+      // groupName,
       createdAt: formattedDate,
-      DP: photoBase64,
+      // DP: photoBase64,
     });
 
     const saved = await newConversation.save();
