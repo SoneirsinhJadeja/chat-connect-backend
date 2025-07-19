@@ -9,7 +9,7 @@ const chatsSchema = new mongoose.Schema({
     type: [String], // ✅ Correct way to declare string array
     required: true,
   },
-  groupName: {
+  chatOwner: {
     type: String,
     required: false, // ✅ Optional, only needed if isGroup is true
   },

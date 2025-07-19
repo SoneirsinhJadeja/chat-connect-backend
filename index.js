@@ -201,9 +201,9 @@ app.put('/update_participants/:id', async (req, res) => {
 
 app.post('/createConversation', upload.single('DP'), async (req, res) => {
   try {
-    const { participants } = req.body;
+    const { participants, chatOwner } = req.body;
 
-    if (!participants) {
+    if (!participants || !chatOwner) {
       return res.status(400).json({ error: "Missing required fields" });
     }
 
@@ -222,7 +222,7 @@ app.post('/createConversation', upload.single('DP'), async (req, res) => {
 
     const newConversation = new Conversation({
       participants: participantArray,
-      // groupName,
+      chatOwner,
       createdAt: formattedDate,
       // DP: photoBase64,
     });
