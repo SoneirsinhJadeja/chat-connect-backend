@@ -199,7 +199,7 @@ app.put('/update_participants/:id', async (req, res) => {
 
 
 
-app.post('/createConversation', upload.single('DP'), async (req, res) => {
+app.post('/createConversation', upload.none(), async (req, res) => {
   try {
     const { participants, chatOwner } = req.body;
 
