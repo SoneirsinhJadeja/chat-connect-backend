@@ -14,10 +14,10 @@ const chatsSchema = new mongoose.Schema({
     required: false, // ✅ Optional, only needed if isGroup is true
   },
   createdAt: {
-    type: String,
-    required: true, // ✅ Timestamp for sorting chats
-    default: () => moment().format('DD-MM-YYYY hh:mm A')
-  },
+  type: Date,
+  default: Date.now, // Automatically stores server timestamp
+}
+
   // DP: {
   //   type: String, // ✅ Optional group or 1-1 chat image
   //   default: null
