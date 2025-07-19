@@ -206,7 +206,7 @@ app.put('/update_participants/:id', async (req, res) => {
 
 
 
-router.post('/createConversation', async (req, res) => {
+app.post('/createConversation', async (req, res) => {
   try {
     const { participants, chatOwner } = req.body;
 
