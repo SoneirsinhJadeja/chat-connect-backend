@@ -10,7 +10,7 @@ const router = express.Router();
 const db = require('./db.js'); // MongoDB connection
 const userProfile = require('./Schemas/userProfileSchema.js'); // User Profile model
 const friendRequest = require('./Schemas/friendRequestSchema.js'); // Friend Request model
-const Conversation  = require('./Schemas/createConversationSchema.js'); // Friend Request model
+const chatsList = require('./Schemas/createConversationSchema.js'); // Friend Request model
 const moment = require('moment-timezone'); // If using timezone support
 
 // 🚀 Initialize Express app
@@ -184,7 +184,6 @@ app.get('/find_conversation', async (req, res) => {
   }
 });
 
-
 app.put('/update_participants/:id', async (req, res) => {
   const convoId = req.params.id;
   const updatedParticipants = req.body.participants;
@@ -221,7 +220,7 @@ router.post('/createConversation', async (req, res) => {
 
     const formattedDate = moment().tz('Asia/Kolkata').format('DD-MM-YYYY hh:mm A');
 
-    const newConversation = new Conversation({
+    const newConversation = new chatsList({
       participants,
       chatOwner,
       createdAt: formattedDate,
