@@ -10,6 +10,7 @@ const db = require('./db.js'); // MongoDB connection
 const userProfile = require('./Schemas/userProfileSchema.js'); // User Profile model
 const friendRequest = require('./Schemas/friendRequestSchema.js'); // Friend Request model
 const Conversation  = require('./Schemas/createConversationSchema.js'); // Friend Request model
+const moment = require('moment-timezone'); // If using timezone support
 
 // 🚀 Initialize Express app
 const app = express();
@@ -218,7 +219,11 @@ app.post('/createConversation', upload.none(), async (req, res) => {
     //   ? `data:${req.file.mimetype};base64,${req.file.buffer.toString('base64')}`
     //   : null;
 
-    const formattedDate = moment().format('DD-MM-YYYY hh:mm A');
+    const moment = require('moment-timezone'); // If using timezone support
+
+    // For India timezone, e.g. Asia/Kolkata
+    const formattedDate = moment().tz('Asia/Kolkata').format('DD-MM-YYYY hh:mm A');
+
 
     const newConversation = new Conversation({
       participants: participantArray,
