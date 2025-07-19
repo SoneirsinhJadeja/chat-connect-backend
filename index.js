@@ -193,23 +193,19 @@ app.put('/update_participants/:id', async (req, res) => {
   }
 
   try {
-    console.log("🔁 Updating ID:", convoId);
-    console.log("📦 New participants:", updatedParticipants);
-
-    const updated = await Conversation.findByIdAndUpdate(
-      convoId,
+    const updated = await chatsList.findByIdAndUpdate(
+      new mongoose.Types.ObjectId(convoId), // ✅ Cast to ObjectId
       { participants: updatedParticipants },
       { new: true }
     );
 
     if (!updated) {
-      console.log("⚠️ No conversation found with this ID.");
       return res.status(404).json({ error: "Conversation not found" });
     }
 
     res.status(200).json(updated);
   } catch (e) {
-    console.error("❌ Update error:", e.message);
+    console.error("❌ Error updating participants:", e.message);
     res.status(500).json({ error: e.message });
   }
 });
