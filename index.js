@@ -150,8 +150,7 @@ app.get('/fetch_friendRequest', async (req, res) => {
   }
 
   try {
-    const data = await friendRequest.find({ to : userEmail }); // 🔍 Only requests sent TO this user
-    console.log(`✅ Friend requests for: ${userEmail}`);
+    const data = await friendRequest.find({ chatOwner : userEmail }); // 🔍 Only requests sent TO this user
     console.log(`✅ Data: ${data}`);
     res.status(200).json(data);
   } catch (error) {
