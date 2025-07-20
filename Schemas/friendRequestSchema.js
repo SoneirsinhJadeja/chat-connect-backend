@@ -13,7 +13,7 @@ const userRequestSchema = new mongoose.Schema({
     type: String,
     required: true,
   },
-  photoBase64: {
+  DP: {
     type: String,
     required: false,
   },

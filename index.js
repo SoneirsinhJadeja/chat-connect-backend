@@ -120,15 +120,15 @@ app.post('/add_friendRequest', upload.single('DP'), async (req, res) => {
       : null;
 
     // ✅ 4. Format date
-    const formattedDate = moment().format('DD-MM-YYYY hh:mm A');
+    const formattedDate = moment().tz('Asia/Kolkata').format('DD-MM-YYYY hh:mm A');
 
     // ✅ 5. Create new request
     const newRequest = new friendRequest({
       from,
+      requestUserName,
       to,
-      requestedUsername: requestUserName,
-      whenRequested: formattedDate,
-      photoBase64,
+      whenRequested,
+      DP: photoBase64, // will be `null` if image is not sent
     });
 
     const savedRequest = await newRequest.save();
