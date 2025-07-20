@@ -187,7 +187,8 @@ router.get('/find_conversation', async (req, res) => {
 
 app.put('/update_participants/:email', async (req, res) => {
   const ownerEmail = req.params.email; // ✅ Get from URL
-  const updatedParticipants = req.body.updatedParticipants;
+  const updatedParticipants = req.body.participants; // ✅ Matches frontend key
+
 
   if (!Array.isArray(updatedParticipants)) {
     return res.status(400).json({ error: 'Participants must be an array' });
