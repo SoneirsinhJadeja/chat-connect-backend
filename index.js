@@ -185,33 +185,30 @@ router.get('/find_conversation', async (req, res) => {
   }
 });
 
-app.put('/update_participants/:id', async (req, res) => {
-  const convoId = req.params.id;
-  const updatedParticipants = req.body.participants;
+app.put('/update_participants/:email', async (req, res) => {
+  const ownerEmail = req.params.email; // ✅ Get from URL
+  const updatedParticipants = req.body.updatedParticipants;
 
   if (!Array.isArray(updatedParticipants)) {
     return res.status(400).json({ error: 'Participants must be an array' });
   }
 
   try {
-    const updated = await chatsList.findByIdAndUpdate(
-      new mongoose.Types.ObjectId(convoId), // ✅ this line needs mongoose
-      { participants: updatedParticipants },
-      { new: true }
+    const updated = await chatsList.updateOne(
+      { chatOwner: ownerEmail }, // ✅ Assuming chatOwner is a field in DB
+      { $set: { participants: updatedParticipants } }
     );
 
-    if (!updated) {
-      return res.status(404).json({ error: "Conversation not found" });
+    if (updated.modifiedCount === 0) {
+      return res.status(404).json({ error: "Conversation not found or unchanged" });
     }
 
-    res.status(200).json(updated);
+    res.status(200).json({ message: "✅ Participants updated", updated });
   } catch (e) {
     console.error("❌ Error updating participants:", e.message);
     res.status(500).json({ error: e.message });
   }
 });
-
-
 
 
 router.post('/createConversation', async (req, res) => {
