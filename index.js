@@ -132,7 +132,7 @@ app.post('/add_friendRequest', upload.single('DP'), async (req, res) => {
     const savedRequest = await newRequest.save();
     console.log('✅ Friend request saved:', savedRequest);
     res.status(201).json(savedRequest);
-    
+
   } catch (error) {
     console.error('❌ Error saving friend request:', error);
     res.status(500).json({ error: "Internal Server Error" });
@@ -155,7 +155,8 @@ app.get('/fetch_friendRequest', async (req, res) => {
     const requests = await friendRequest.find({ to: email });
 
     if (!requests || requests.length === 0) {
-      return res.status(404).json([]); // ✅ Return empty list instead of null
+      // ✅ Always return 200
+    return res.status(200).json(requests);  // ✅ Return empty list instead of null
     }
 
     res.status(200).json(requests);
