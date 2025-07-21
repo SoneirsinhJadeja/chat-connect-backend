@@ -93,11 +93,7 @@ app.get('/fetch_userProfile_for_sendReq', async (req, res) => {
 // ========================
 app.post('/add_friendRequest', upload.single('DP'), async (req, res) => {
   try {
-    const {
-      from,
-      requestUserName,
-      to,
-    } = req.body;
+    const { from, requestUserName, to } = req.body;
 
     // ✅ 1. Validate required fields
     if (!from || !to || !requestUserName) {
@@ -116,8 +112,8 @@ app.post('/add_friendRequest', upload.single('DP'), async (req, res) => {
 
     // ✅ 3. Convert image to base64 if exists
     const photoBase64 = req.file
-      ? `data:${req.file.mimetype};base64,${req.file.buffer.toString('base64')}`
-      : null;
+    ? `data:${req.file.mimetype};base64,${req.file.buffer.toString('base64')}`
+    : null;
 
     // ✅ 4. Format date
     const formattedDate = moment().tz('Asia/Kolkata').format('DD-MM-YYYY hh:mm A');
@@ -125,17 +121,18 @@ app.post('/add_friendRequest', upload.single('DP'), async (req, res) => {
     // ✅ 5. Create new request
     // ✅ Corrected: Use requestedUsername instead of requestUserName
     const newRequest = new friendRequest({
-      from,
-      to,
-      requestedUsername: requestUserName, // ✅ Fix here
-      whenRequested: formattedDate,
-      DP: photoBase64,
-    });
+    from,
+    to,
+    requestedUsername: requestUserName,
+    DP: photoBase64,
+    whenRequested: formattedDate
+  });
 
 
     const savedRequest = await newRequest.save();
     console.log('✅ Friend request saved:', savedRequest);
     res.status(201).json(savedRequest);
+    
   } catch (error) {
     console.error('❌ Error saving friend request:', error);
     res.status(500).json({ error: "Internal Server Error" });
