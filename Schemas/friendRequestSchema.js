@@ -21,8 +21,6 @@ const userRequestSchema = new mongoose.Schema({
     type: String,
     required: true,
   },
-}, {
-  timestamps: true // ✅ Automatically add createdAt and updatedAt
 });
 
 // ✅ Optional: Prevent duplicate friend requests
