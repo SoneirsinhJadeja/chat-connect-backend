@@ -39,7 +39,7 @@ app.get('/', (req, res) => {
 // ========================
 // 👤 Add User Profile
 // ========================
-app.post('/add_userProfile', upload.single('DP'), async (req, res) => {
+app.post('/add_userProfile', upload.single('dp'), async (req, res) => {
   try {
     const { name, email, createdAt, lastSeen } = req.body;
 
@@ -91,7 +91,7 @@ app.get('/fetch_userProfile_for_sendReq', async (req, res) => {
 // ========================
 // 🤝 Add Friend Request
 // ========================
-app.post('/add_friendRequest', upload.single('DP'), async (req, res) => {
+app.post('/add_friendRequest', upload.single('dp'), async (req, res) => {
   try {
     const { from, requestUserName, to } = req.body;
 
@@ -124,7 +124,7 @@ app.post('/add_friendRequest', upload.single('DP'), async (req, res) => {
     from,
     to,
     requestedUsername: requestUserName,
-    DP: photoBase64,
+    dp: photoBase64,
     whenRequested: formattedDate
   });
 
@@ -186,17 +186,17 @@ router.get('/find_conversation', async (req, res) => {
 
 app.put('/update_participants/:email', async (req, res) => {
   const ownerEmail = req.params.email; // ✅ Get from URL
-  const updatedParticipants = req.body.participants; // ✅ Matches frontend key
+  const updatedparticipants = req.body.participants; // ✅ Matches frontend key
 
 
-  if (!Array.isArray(updatedParticipants)) {
+  if (!Array.isArray(updatedparticipants)) {
     return res.status(400).json({ error: 'Participants must be an array' });
   }
 
   try {
     const updated = await chatsList.updateOne(
       { chatOwner: ownerEmail }, // ✅ Assuming chatOwner is a field in DB
-      { $set: { participants: updatedParticipants } }
+      { $set: { participants: updatedparticipants } }
     );
 
     if (updated.modifiedCount === 0) {
