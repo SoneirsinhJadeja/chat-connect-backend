@@ -104,10 +104,16 @@ app.post('/add_friendRequest', upload.single('dp'), async (req, res) => {
       return res.status(400).json({ error: "Invalid email format" });
     }
 
-    // ✅ 2. Prevent duplicate friend request
-    const existingRequest = await friendRequest.findOne({ from, to });
+     // ✅ 2. Prevent duplicate friend requests in either direction
+    const existingRequest = await friendRequest.findOne({
+      $or: [
+        { from, to },
+        { from: to, to: from } // 🔁 reversed direction
+      ]
+    });
+
     if (existingRequest) {
-      return res.status(409).json({ message: "Friend request already sent" });
+      return res.status(409).json({ message: "Friend request already exists in either direction" });
     }
 
     // ✅ 3. Convert image to base64 if exists
