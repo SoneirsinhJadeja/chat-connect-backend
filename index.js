@@ -53,7 +53,7 @@ app.post('/add_userProfile', upload.single('DP'), async (req, res) => {
     }
 
     // 🖼️ Convert uploaded image to Base64 if exists
-    const photoBase64 = req.file
+    const dp = req.file
       ? `data:${req.file.mimetype};base64,${req.file.buffer.toString('base64')}`
       : null;
 
@@ -62,7 +62,7 @@ app.post('/add_userProfile', upload.single('DP'), async (req, res) => {
       email,
       createdAt,
       lastSeen,
-      photoBase64,
+      dp,
     });
 
     const savedUser = await newUser.save();
