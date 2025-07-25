@@ -16,7 +16,7 @@ let userSchema = new mongoose.Schema({
   lastSeen: {
     type: String,
   },
-  photoBase64: {
+  dp: {
     required: false,
     type: String
   }

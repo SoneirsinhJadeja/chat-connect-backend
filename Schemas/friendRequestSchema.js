@@ -13,7 +13,7 @@ const userRequestSchema = new mongoose.Schema({
     type: String,
     required: true,
   },
-  DP: {
+  dp: {
     type: String,
     required: false,
   },
