@@ -174,23 +174,24 @@ app.get('/fetch_friendRequest', async (req, res) => {
 // ========================
 // 📥 Fetch users friend frequest
 // ========================
-app.delete('/delete_friendRequest', async (req, res) => { 
-  const { FROM, TO } = req.body;
+app.delete('/delete_friendRequest', async (req, res) => {
+  const FROM = req.query.FROM;
+  const TO = req.query.TO;
 
-  if (!FROM && !TO) {
+  if (!FROM || !TO) {
     return res.status(400).json({ error: 'Missing email' });
   }
 
   try {
-    const requests = await friendRequest.deleteOne({ to: TO, from: FROM });
+    const result = await friendRequest.deleteOne({ to: TO, from: FROM });
 
-    if (!requests || requests.deletedCount === 0) {
-      return res.status(404).json([]);
+    if (!result || result.deletedCount === 0) {
+      return res.status(404).json({ message: "Request not found" });
     }
 
     res.status(200).json({ message: "Deleted successfully" });
   } catch (e) {
-    console.error("❌ Error deleting friend requests:", e.message);
+    console.error("❌ Error deleting friend request:", e.message);
     res.status(500).json({ error: e.message });
   }
 });
