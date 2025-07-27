@@ -1,25 +1,22 @@
-const mongoose = require('mongoose'); // 👈 This was missing
+const mongoose = require('mongoose');
 
 const participantSchema = new mongoose.Schema({
-  email: { type: String, required: true },
-  name: { type: String },
-  dp: { type: String },
-  nickname: { type: String }
-}, { _id: false });
-
-const chatsSchema = new mongoose.Schema({
-  participants: {
-    type: [participantSchema],
-    required: true,
-  },
-  chatOwner: {
+  email: String,
+  name: String,
+  dp: {
     type: String,
-    required: false,
+    default: null
   },
-  createdAt: {
-    type: String,
-    required: true,
-  }
+  nickname: String
 });
 
-module.exports = mongoose.model("chatsList", chatsSchema);
+const conversationSchema = new mongoose.Schema({
+  chatOwner: {
+    type: String,
+    required: true
+  },
+  participants: [participantSchema],
+  createdAt: String
+});
+
+module.exports = mongoose.model('chatsList', conversationSchema);
