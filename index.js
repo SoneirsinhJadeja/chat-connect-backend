@@ -14,6 +14,7 @@ const chatsList = require('./Schemas/createConversationSchema'); // Chat schema
 
 // 🚀 Initialize Express app
 const app = express();
+app.use(express.json());
 
 // 📦 Middleware
 app.use(cors());
