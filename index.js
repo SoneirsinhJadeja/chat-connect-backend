@@ -194,16 +194,14 @@ app.delete('/delete_friendRequest', async (req, res) => {
   }
 });
 
-router.get('/find_conversation', async (req, res) => {
+app.get('/find_conversation', async (req, res) => {
   const email = req.query.email;
   // console.log("🔍 Checking conversation for email:", email);
 
   if (!email) return res.status(400).json({ error: 'Missing email' });
 
   try {
-    const convo = await chatsList.findOne({
-      chatOwner : email,
-    });
+    const convo = await chatsList.findOne({ chatOwner: email });
 
     if (!convo) return res.status(404).json(null);
     res.status(200).json(convo);
