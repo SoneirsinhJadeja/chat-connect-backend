@@ -1,9 +1,11 @@
+const mongoose = require('mongoose'); // 👈 This was missing
+
 const participantSchema = new mongoose.Schema({
   email: { type: String, required: true },
   name: { type: String },
   dp: { type: String },
   nickname: { type: String }
-}, { _id: false }); // ✅ Prevent auto _id for subdocs if not needed
+}, { _id: false });
 
 const chatsSchema = new mongoose.Schema({
   participants: {
@@ -19,3 +21,5 @@ const chatsSchema = new mongoose.Schema({
     required: true,
   }
 });
+
+module.exports = mongoose.model("chatsList", chatsSchema);
