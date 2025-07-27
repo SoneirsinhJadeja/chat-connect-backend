@@ -254,6 +254,7 @@ app.post('/createConversation', async (req, res) => {
       dp: p.dp,
       nickname: p.nickname
     }));
+    console.log("participants data: sanitizedParticipants" + sanitizedParticipants)
 
     const newChat = new chatsList({
       participants: sanitizedParticipants,
@@ -262,6 +263,7 @@ app.post('/createConversation', async (req, res) => {
     });
 
     const saved = await newChat.save();
+    console.log("saved data:"+ saved)
     res.status(201).json(saved);
   } catch (err) {
     console.error("❌ Error:", err.message);
