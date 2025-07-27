@@ -243,17 +243,10 @@ app.put('/update_participants/:email', async (req, res) => {
 
 router.post('/createConversation', async (req, res) => {
   try {
-    // console.log("🚀 /createConversation hit!");
     const { participants, chatOwner } = req.body;
-
-    console.log("📦 Body received:", req.body);
 
     if (!participants || !chatOwner) {
       return res.status(400).json({ error: "Missing required fields" });
-    }
-
-    if (!Array.isArray(participants)) {
-      return res.status(400).json({ error: "Participants must be an array" });
     }
 
     const formattedDate = moment().tz('Asia/Kolkata').format('DD-MM-YYYY hh:mm A');
@@ -265,20 +258,19 @@ router.post('/createConversation', async (req, res) => {
       nickname: p.nickname
     }));
 
-    const newConversation = new chatsList({
+    const newChat = new chatsList({
       participants: sanitizedParticipants,
       chatOwner,
       createdAt: formattedDate,
     });
 
-    const saved = await newConversation.save();
-    console.log("✅ Saved:", saved);
+    const saved = await newChat.save();
     res.status(201).json(saved);
   } catch (error) {
-    console.error("❌ Error creating conversation:", error);
-    res.status(500).json({ error: "Internal Server Error", message: error.message });
+    res.status(500).json({ error: 'Internal Server Error', message: error.message });
   }
 });
+
 
 module.exports = router;
 
