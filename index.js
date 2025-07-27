@@ -254,7 +254,7 @@ app.post('/createConversation', async (req, res) => {
       dp: p.dp,
       nickname: p.nickname
     }));
-    console.log("participants data: sanitizedParticipants" + sanitizedParticipants)
+    console.log("participants data: sanitizedParticipants" + sanitizedParticipants.toString())
 
     const newChat = new chatsList({
       participants: sanitizedParticipants,
