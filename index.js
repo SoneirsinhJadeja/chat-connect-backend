@@ -4,7 +4,6 @@ const multer = require('multer');
 const cors = require('cors');
 const validator = require('validator');
 const moment = require('moment-timezone'); // ✅ Only this one — remove duplicate
-const router = express.Router();
 
 // 🗃️ Import DB and Mongoose models
 const mongoose = require('mongoose');
@@ -20,7 +19,6 @@ const app = express();
 app.use(cors());
 app.use(express.json({ limit: '10mb' })); // or higher, e.g. '20mb'
 app.use(express.urlencoded({ extended: true, limit: '10mb' }));
-app.use('/', router); // ✅ Mount router AFTER middlewares
 
 // ✅ Ensure unique indexes (example: unique email in user profile)
 userProfile.init().then(() => {
@@ -241,8 +239,9 @@ app.put('/update_participants/:email', async (req, res) => {
 });
 
 
-router.post('/createConversation', async (req, res) => {
+app.post('/createConversation', async (req, res) => {
   try {
+    console.log("📦 Request body:", req.body);
     const { participants, chatOwner } = req.body;
 
     if (!participants || !chatOwner) {
@@ -266,13 +265,11 @@ router.post('/createConversation', async (req, res) => {
 
     const saved = await newChat.save();
     res.status(201).json(saved);
-  } catch (error) {
-    res.status(500).json({ error: 'Internal Server Error', message: error.message });
+  } catch (err) {
+    console.error("❌ Error:", err.message);
+    res.status(500).json({ error: 'Internal Server Error', message: err.message });
   }
 });
-
-
-module.exports = router;
 
 // 🚀 Start the server
 const port = process.env.PORT || 3000;
