@@ -21,8 +21,8 @@ app.use(express.json());
 
 // 📦 Middleware
 app.use(cors());
-app.use(express.json({ limit: '10mb' })); // or higher, e.g. '20mb'
-app.use(express.urlencoded({ extended: true, limit: '10mb' }));
+app.use(express.json({ limit: '20mb' })); // or higher, e.g. '20mb'
+app.use(express.urlencoded({ extended: true, limit: '20mb' }));
 
 // ✅ Ensure unique indexes (example: unique email in user profile)
 userProfile.init().then(() => {
