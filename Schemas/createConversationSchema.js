@@ -10,7 +10,7 @@ const chatsSchema = new mongoose.Schema({
     {
       email: { type: String, required: true },
       name: { type: String },
-      profileUrl: { type: String },
+      dp: { type: String },
       nickname: { type: String }
     }
   ],
