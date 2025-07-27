@@ -6,9 +6,17 @@ const chatsSchema = new mongoose.Schema({
   //   required: true,
   // },
   participants: {
-    type: [String], // ✅ Correct way to declare string array
-    required: true,
-  },
+  type: [
+    {
+      email: { type: String, required: true },
+      name: { type: String },
+      profileUrl: { type: String },
+      nickname: { type: String }
+    }
+  ],
+  required: true,
+},
+
   chatOwner: {
     type: String,
     required: false, // ✅ Optional, only needed if isGroup is true
@@ -17,10 +25,7 @@ const chatsSchema = new mongoose.Schema({
     type: String,
     required: true, // ✅ Timestamp for sorting chats
   },
-  // DP: {
-  //   type: String, // ✅ Optional group or 1-1 chat image
-  //   default: null
-  // }
+
 
 });
 
