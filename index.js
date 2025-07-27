@@ -258,8 +258,15 @@ router.post('/createConversation', async (req, res) => {
 
     const formattedDate = moment().tz('Asia/Kolkata').format('DD-MM-YYYY hh:mm A');
 
+    const sanitizedParticipants = participants.map(p => ({
+      email: p.email,
+      name: p.name,
+      dp: p.dp,
+      nickname: p.nickname
+    }));
+
     const newConversation = new chatsList({
-      participants,
+      participants: sanitizedParticipants,
       chatOwner,
       createdAt: formattedDate,
     });
