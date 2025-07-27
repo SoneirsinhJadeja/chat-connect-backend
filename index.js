@@ -24,7 +24,7 @@ app.use('/', router); // ✅ Mount router AFTER middlewares
 
 // ✅ Ensure unique indexes (example: unique email in user profile)
 userProfile.init().then(() => {
-  console.log('✅ Unique email index ensured');
+  // console.log('✅ Unique email index ensured');
 });
 
 // 🖼️ Multer setup for image uploads (stored in memory)
@@ -80,7 +80,7 @@ app.post('/add_userProfile', upload.single('dp'), async (req, res) => {
 app.get('/fetch_userProfile_for_sendReq', async (req, res) => {
   try {
     const data = await userProfile.find();
-    console.log('✅ Fetched user profiles');
+    // console.log('✅ Fetched user profiles');
     res.status(200).json(data);
   } catch (error) {
     console.error('❌ Error fetching users:', error);
@@ -198,7 +198,7 @@ app.delete('/delete_friendRequest', async (req, res) => {
 
 router.get('/find_conversation', async (req, res) => {
   const email = req.query.email;
-  console.log("🔍 Checking conversation for email:", email);
+  // console.log("🔍 Checking conversation for email:", email);
 
   if (!email) return res.status(400).json({ error: 'Missing email' });
 
@@ -243,7 +243,7 @@ app.put('/update_participants/:email', async (req, res) => {
 
 router.post('/createConversation', async (req, res) => {
   try {
-    console.log("🚀 /createConversation hit!");
+    // console.log("🚀 /createConversation hit!");
     const { participants, chatOwner } = req.body;
 
     console.log("📦 Body received:", req.body);

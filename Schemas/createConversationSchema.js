@@ -1,34 +1,21 @@
-const mongoose = require('mongoose');
+const participantSchema = new mongoose.Schema({
+  email: { type: String, required: true },
+  name: { type: String },
+  dp: { type: String },
+  nickname: { type: String }
+}, { _id: false }); // ✅ Prevent auto _id for subdocs if not needed
 
 const chatsSchema = new mongoose.Schema({
-  // isGroup: {
-  //   type: Boolean,
-  //   required: true,
-  // },
   participants: {
-  type: [
-    {
-      email: { type: String, required: true },
-      name: { type: String },
-      dp: { type: String },
-      nickname: { type: String }
-    }
-  ],
-  required: true,
-},
-
+    type: [participantSchema],
+    required: true,
+  },
   chatOwner: {
     type: String,
-    required: false, // ✅ Optional, only needed if isGroup is true
+    required: false,
   },
   createdAt: {
     type: String,
-    required: true, // ✅ Timestamp for sorting chats
-  },
-
-
+    required: true,
+  }
 });
-
-// ✅ Model name: chats
-// ✅ Collection name: chats
-module.exports = mongoose.model("chatsList", chatsSchema, "chatsList");
